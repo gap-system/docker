@@ -51,13 +51,13 @@ ARG GAP_USER_GROUPNAME
 RUN apt-get update --yes &&                               \
     apt-get install --no-install-recommends --quiet --yes \
     autoconf                                              \
+    curl                                                  \
     build-essential                                       \
     cmake                                                 \
-    g++                                                   \
-    gcc                                                   \
-    libgmp3-dev                                           \
-    libncurses5-dev curl                                  \
-    libreadline6-dev                                      \
+    zlib1g-dev                                            \
+    libgmp-dev                                            \
+    libncurses-dev                                        \
+    libreadline-dev                                       \
     libtool                                               \
     m4                                                    \
     unzip 
