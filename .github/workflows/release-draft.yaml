@@ -1,5 +1,5 @@
 ---
-name: release-draft
+name: Release notes - make a draft
 run-name: release-draft-${{ github.event.number }}
 
 on:

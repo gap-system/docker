@@ -1,5 +1,5 @@
 ---
-name: Docker - Build and push
+name: Container - build and push
 
 on:
   pull_request: 
