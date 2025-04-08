@@ -109,5 +109,7 @@ RUN mkdir -pv "$HOME/.gap/pkg"
 COPY --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} --from=build "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/" "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}//"
 ADD --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} ${PACKAGE_MANAGER_DOWNLOAD_URL} ./
 RUN tar -xvf ${PACKAGE_MANAGER_TARBALL_NAME} -C "$HOME/.gap/pkg"
+RUN echo 'LoadPackage("PackageManager"); UpdatePackage("PackageManager", false); QuitGap(InstallRequiredPackages());' | gap --bare
+
 
 CMD [ "bash" ]
