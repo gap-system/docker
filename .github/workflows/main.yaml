@@ -82,5 +82,4 @@ jobs:
           cache-to: type=gha,mode=max`
           build-args: |
             PLATFORM=${{ matrix.platform }}
-            GAP_BUILD=${{ matrix.gap-build }}
             GAP_VERSION=${{ matrix.gap-version }}
