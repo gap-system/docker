@@ -128,7 +128,7 @@ RUN apt-get update --yes &&                               \
     libncurses-dev                                        \
     libreadline-dev                                       \
     libtool                                               \
-    m4                                                    \
+    m4
 
 USER ${GAP_USER_USERNAME}
 WORKDIR ${GAP_USER_HOMEDIR}
