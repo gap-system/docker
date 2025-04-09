@@ -67,7 +67,7 @@ jobs:
         with:
           context: ./src/dockerfiles/${{ matrix.image }}
           file: ./src/dockerfiles/${{ matrix.image }}/Dockerfile
-          push: ${{ ! github.event_name == 'pull_request' }}
+          push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
