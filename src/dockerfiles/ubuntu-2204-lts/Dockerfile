@@ -1,5 +1,3 @@
-ARG PLATFORM="linux/arm64"
-
 ## {{{
 ARG GAP_USER_USERNAME="gap"
 ARG GAP_USER_GROUPNAME="gap"
@@ -27,7 +25,7 @@ ARG PACKAGE_MANAGER_DOWNLOAD_URL="https://github.com/gap-packages/PackageManager
 
 
 
-FROM --platform=${PLATFORM} ubuntu:22.04 AS base
+FROM ubuntu:22.04 AS base
 ARG GAP_USER_GID
 ARG GAP_USER_GROUPNAME
 ARG GAP_USER_UID
