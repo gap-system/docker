@@ -73,10 +73,11 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./src/dockerfiles/${{ matrix.image }}
-          file: ./src/dockerfiles/${{ matrix.image }}/Dockerfile.${{ matrix.gap-build }}
+          file: ./src/dockerfiles/${{ matrix.image }}/Dockerfile
           push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          target: ${{ matrix.gap-build }}
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max`

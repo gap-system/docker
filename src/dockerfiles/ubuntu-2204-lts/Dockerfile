@@ -36,9 +36,7 @@ RUN groupadd --system --gid ${GAP_USER_GID} ${GAP_USER_GROUPNAME} && \
      useradd --system --gid ${GAP_USER_GID} --home-dir ${GAP_USER_HOMEDIR} --create-home ${GAP_USER_USERNAME}
 
 
-
-
-FROM base AS build
+FROM base AS buildbare
 ARG GAP_VERSION
 ARG GAP_DOWNLOAD_URL
 ARG GAP_TARBALL_NAME
@@ -69,9 +67,7 @@ WORKDIR "./gap-${GAP_VERSION}"
 RUN ./configure && MAKEFLAGS=-j8 make
 
 
-
-
-FROM base AS result
+FROM base AS bare
 
 ARG GAP_VERSION
 ARG GAP_USER_HOMEDIR
@@ -104,7 +100,7 @@ RUN apt-get update --yes &&                               \
 USER ${GAP_USER_USERNAME}
 
 RUN mkdir -pv "$HOME/.gap/pkg"
-COPY --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} --from=build "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/" "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}//"
+COPY --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} --from=buildbare "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/" "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}//"
 ADD --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} ${PACKAGE_MANAGER_DOWNLOAD_URL} ./
 RUN tar -xvf ${PACKAGE_MANAGER_TARBALL_NAME} -C "$HOME/.gap/pkg"
 RUN echo 'LoadPackage("PackageManager"); UpdatePackage("PackageManager", false); QuitGap(InstallRequiredPackages());' | gap --bare
