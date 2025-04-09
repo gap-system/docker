@@ -13,7 +13,10 @@ ARG PACKAGE_MANAGER_VERSION="1.6.2"
 ## }}}
 
 ## {{{
-ARG GAP_TARBALL_NAME="gap-${GAP_VERSION}-core.tar.gz"
+ARG GAP_CORE_TARBALL_NAME="gap-${GAP_VERSION}-core.tar.gz"
+ARG GAP_CORE_DOWNLOAD_URL="https://github.com/gap-system/gap/releases/download/v${GAP_VERSION}/${GAP_CORE_TARBALL_NAME}"
+
+ARG GAP_TARBALL_NAME="gap-${GAP_VERSION}.tar.gz"
 ARG GAP_DOWNLOAD_URL="https://github.com/gap-system/gap/releases/download/v${GAP_VERSION}/${GAP_TARBALL_NAME}"
 ## }}}
 
@@ -21,9 +24,6 @@ ARG GAP_DOWNLOAD_URL="https://github.com/gap-system/gap/releases/download/v${GAP
 ARG PACKAGE_MANAGER_TARBALL_NAME="PackageManager-${PACKAGE_MANAGER_VERSION}.tar.gz"
 ARG PACKAGE_MANAGER_DOWNLOAD_URL="https://github.com/gap-packages/PackageManager/releases/download/v${PACKAGE_MANAGER_VERSION}/${PACKAGE_MANAGER_TARBALL_NAME}"
 ## }}}
-
-
-
 
 FROM ubuntu:22.04 AS base
 ARG GAP_USER_GID
@@ -35,11 +35,18 @@ ARG GAP_USER_HOMEDIR
 RUN groupadd --system --gid ${GAP_USER_GID} ${GAP_USER_GROUPNAME} && \
      useradd --system --gid ${GAP_USER_GID} --home-dir ${GAP_USER_HOMEDIR} --create-home ${GAP_USER_USERNAME}
 
+RUN apt-get update --yes && \
+    apt-get install --no-install-recommends --quiet --yes \
+        ca-certificates                                   \
+        curl                                              \
+        git                                               \
+        unzip
+
 
 FROM base AS buildbare
 ARG GAP_VERSION
-ARG GAP_DOWNLOAD_URL
-ARG GAP_TARBALL_NAME
+ARG GAP_CORE_DOWNLOAD_URL
+ARG GAP_CORE_TARBALL_NAME
 ARG GAP_USER_HOMEDIR
 ARG GAP_USER_USERNAME
 ARG GAP_USER_GROUPNAME
@@ -47,7 +54,6 @@ ARG GAP_USER_GROUPNAME
 RUN apt-get update --yes &&                               \
     apt-get install --no-install-recommends --quiet --yes \
     autoconf                                              \
-    curl                                                  \
     build-essential                                       \
     cmake                                                 \
     zlib1g-dev                                            \
@@ -55,20 +61,17 @@ RUN apt-get update --yes &&                               \
     libncurses-dev                                        \
     libreadline-dev                                       \
     libtool                                               \
-    m4                                                    \
-    unzip 
+    m4
 
 USER ${GAP_USER_USERNAME}
 WORKDIR ${GAP_USER_HOMEDIR}
-ADD --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} ${GAP_DOWNLOAD_URL} ./
-RUN tar -xzf ${GAP_TARBALL_NAME}
+ADD --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} ${GAP_CORE_DOWNLOAD_URL} ./
+RUN tar -xzf ${GAP_CORE_TARBALL_NAME}
 
 WORKDIR "./gap-${GAP_VERSION}"
 RUN ./configure && MAKEFLAGS=-j8 make
 
-
 FROM base AS bare
-
 ARG GAP_VERSION
 ARG GAP_USER_HOMEDIR
 ARG GAP_USER_USERNAME
@@ -104,6 +107,66 @@ COPY --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} --from=buildbare "${GAP_
 ADD --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} ${PACKAGE_MANAGER_DOWNLOAD_URL} ./
 RUN tar -xvf ${PACKAGE_MANAGER_TARBALL_NAME} -C "$HOME/.gap/pkg"
 RUN echo 'LoadPackage("PackageManager"); UpdatePackage("PackageManager", false); QuitGap(InstallRequiredPackages());' | gap --bare
+CMD [ "bash" ]
 
 
+FROM base AS buildfull
+ARG GAP_VERSION
+ARG GAP_DOWNLOAD_URL
+ARG GAP_TARBALL_NAME
+ARG GAP_USER_HOMEDIR
+ARG GAP_USER_USERNAME
+ARG GAP_USER_GROUPNAME
+
+RUN apt-get update --yes &&                               \
+    apt-get install --no-install-recommends --quiet --yes \
+    autoconf                                              \
+    build-essential                                       \
+    cmake                                                 \
+    zlib1g-dev                                            \
+    libgmp-dev                                            \
+    libncurses-dev                                        \
+    libreadline-dev                                       \
+    libtool                                               \
+    m4                                                    \
+
+USER ${GAP_USER_USERNAME}
+WORKDIR ${GAP_USER_HOMEDIR}
+ADD --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} ${GAP_DOWNLOAD_URL} ./
+RUN tar -xzf ${GAP_TARBALL_NAME}
+
+WORKDIR "./gap-${GAP_VERSION}"
+RUN ./configure && MAKEFLAGS=-j8 make
+
+FROM base AS full
+
+ARG GAP_VERSION
+ARG GAP_USER_HOMEDIR
+ARG GAP_USER_USERNAME
+ARG GAP_USER_GROUPNAME
+ARG PACKAGE_MANAGER_TARBALL_NAME
+ARG PACKAGE_MANAGER_DOWNLOAD_URL
+
+ENV PATH="${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/:${PATH}"
+ENV LD_LIBRARY_PATH="${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/lib"
+
+RUN apt-get update --yes &&                               \
+    apt-get install --no-install-recommends --quiet --yes \
+        4ti2                                              \
+        libcdd0d                                          \
+        libcurl4                                          \
+        libgmp10                                          \
+        libmpc3                                           \
+        libmpfi0                                          \
+        libmpfr6                                          \
+        libncurses5                                       \
+        libreadline8                                      \
+        libzmq5                                           \
+        pari-gp                                           \
+        singular                                          \
+        zlib1g
+
+USER ${GAP_USER_USERNAME}
+
+COPY --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} --from=buildfull "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/" "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}//"
 CMD [ "bash" ]

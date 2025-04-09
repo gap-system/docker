@@ -32,6 +32,7 @@ jobs:
           - ubuntu-2204-lts
         gap-build:
           - bare
+          - full
         gap-version:
           - 4.14.0
           - 4.13.1
