@@ -8,7 +8,7 @@ ARG GAP_USER_HOMEDIR="/opt/gap"
 ## }}}
 
 ## {{{
-ARG GAP_VERSION="4.13.1"
+ARG GAP_VERSION="4.14.0"
 ARG PACKAGE_MANAGER_VERSION="1.6.2"
 ## }}}
 
