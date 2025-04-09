@@ -19,7 +19,6 @@ on:
 
 jobs:
   docker-image-build:
-    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -28,7 +27,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        image:
+        operating-system-base:
           - ubuntu-2204-lts
         gap-build:
           - bare
@@ -36,51 +35,8 @@ jobs:
         gap-version:
           - 4.14.0
           - 4.13.1
-
-    steps:
-      - name: 👨‍💻 git -- checkout
-        uses: actions/checkout@v4
-
-      - name: 🐬 docker -- metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            name=ghcr.io/${{ github.repository }}
-          tags: |
-            type=sha
-            type=raw,value=${{ matrix.gap-version }}-${{ matrix.gap-build }}
-
-
-      - name: 📦 docker -- login to ghcr-registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 💻 quemu -- setup
-        uses: docker/setup-qemu-action@v3
-
-      - name: 🐬 docker -- setup buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          install: true
-          driver-opts: |
-            image=moby/buildkit:master
-            network=host
-
-      - name: 🐬 docker -- build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: ./src/dockerfiles/${{ matrix.image }}
-          file: ./src/dockerfiles/${{ matrix.image }}/Dockerfile
-          push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          target: ${{ matrix.gap-build }}
-          platforms: linux/amd64,linux/arm64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max`
-          build-args: |
-            GAP_VERSION=${{ matrix.gap-version }}
+    uses: ./.github/workflows/worflow-dispatch-build.yaml
+    with:
+      gap-version: ${{ matrix.gap-version }}
+      gap-build: ${{ matrix.gap-build }}
+      operating-system-base: ${{ matrix.operating-system-base }}

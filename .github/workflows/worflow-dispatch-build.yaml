@@ -1,0 +1,70 @@
+name: Docker - build and publish image
+
+on:
+  workflow_call:
+    inputs:
+      gap-version:
+        required: true
+        type: string
+      gap-build:
+        required: true
+        type: string
+      operating-system-base:
+        required: true
+        type: string
+
+jobs:
+  docker-image-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    steps:
+      - name: 👨‍💻 git -- checkout
+        uses: actions/checkout@v4
+
+      - name: 🐬 docker -- metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            name=ghcr.io/${{ github.repository }}
+          tags: |
+            type=sha
+            type=raw,value=${{ inputs.gap-version }}-${{ inputs.gap-build }}
+
+
+      - name: 📦 docker -- login to ghcr-registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 💻 quemu -- setup
+        uses: docker/setup-qemu-action@v3
+
+      - name: 🐬 docker -- setup buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          driver-opts: |
+            image=moby/buildkit:master
+            network=host
+
+      - name: 🐬 docker -- build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/dockerfiles/${{ inputs.operating-system-base }}
+          file: ./src/dockerfiles/${{ inputs.operating-system-base }}/Dockerfile
+          push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          target: ${{ inputs.gap-build }}
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max`
+          build-args: |
+            GAP_VERSION=${{ inputs.gap-version }}
