@@ -30,6 +30,8 @@ jobs:
       matrix:
         image:
           - ubuntu-2204-lts
+        gap-build:
+          - bare
         gap-version:
           - 4.14.0
           - 4.13.1
@@ -46,7 +48,7 @@ jobs:
             name=ghcr.io/${{ github.repository }}
           tags: |
             type=sha
-            type=raw,value=${{ matrix.gap-version }}
+            type=raw,value=${{ matrix.gap-version }}-${{ matrix.gap-build }}
 
 
       - name: 📦 docker -- login to ghcr-registry
@@ -66,7 +68,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./src/dockerfiles/${{ matrix.image }}
-          file: ./src/dockerfiles/${{ matrix.image }}/Dockerfile
+          file: ./src/dockerfiles/${{ matrix.image }}/Dockerfile.${{ matrix-gap-build }}
           push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
