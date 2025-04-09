@@ -5,6 +5,14 @@
 * Run a container:
 
 ```
+docker run -it ghcr.io/limakzi/gap-docker:4.13.1-full
+```
+
+```
+docker run -it ghcr.io/limakzi/gap-docker:4.14.0-full
+```
+
+```
 docker run -it ghcr.io/limakzi/gap-docker:4.13.1-bare
 ```
 
