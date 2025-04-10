@@ -98,6 +98,8 @@ RUN apt-get update --yes &&                               \
     apt-get install --no-install-recommends --quiet --yes \
         ca-certificates                                   \
         curl                                              \
+        gpg                                               \
+        jq                                                \
         4ti2                                              \
         libcdd0d                                          \
         libcurl4                                          \
@@ -133,13 +135,24 @@ RUN apt-get update --yes &&                               \
     apt-get install --no-install-recommends --quiet --yes \
     autoconf                                              \
     build-essential                                       \
-    cmake                                                 \
-    zlib1g-dev                                            \
-    libgmp-dev                                            \
-    libncurses-dev                                        \
     libreadline-dev                                       \
+    libcdd-dev                                            \
+    libcurl4-gnutls-dev                                   \
+    libfplll-dev                                          \
+    libgmp-dev                                            \
+    libmpc-dev                                            \
+    libmpfi-dev                                           \
+    libmpfr-dev                                           \
+    libncurses-dev                                        \
     libtool                                               \
-    m4
+    libzmq3-dev                                           \
+    netbase                                               \
+    pari-gp                                               \
+    perl                                                  \
+    polymake                                              \
+    singular                                              \
+    zlib1g-dev                                            \
+    libboost-dev
 
 USER ${GAP_USER_USERNAME}
 WORKDIR ${GAP_USER_HOMEDIR}
