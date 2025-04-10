@@ -40,8 +40,20 @@ RUN apt-get update --yes && \
         ca-certificates                                   \
         curl                                              \
         git                                               \
+        4ti2                                              \
+        libcdd0d                                          \
+        libcurl4                                          \
+        libgmp10                                          \
+        libmpc3                                           \
+        libmpfi0                                          \
+        libmpfr6                                          \
+        libncurses5                                       \
+        libreadline8                                      \
+        libzmq5                                           \
+        pari-gp                                           \
+        singular                                          \
+        zlib1g                                            \
         unzip
-
 
 FROM base AS buildbare
 ARG GAP_VERSION
@@ -109,8 +121,7 @@ RUN tar -xvf ${PACKAGE_MANAGER_TARBALL_NAME} -C "$HOME/.gap/pkg"
 RUN echo 'LoadPackage("PackageManager"); UpdatePackage("PackageManager", false); QuitGap(InstallRequiredPackages());' | gap --bare
 CMD [ "bash" ]
 
-
-FROM base AS buildfull
+FROM base AS buildslim
 ARG GAP_VERSION
 ARG GAP_DOWNLOAD_URL
 ARG GAP_TARBALL_NAME
@@ -138,7 +149,18 @@ RUN tar -xzf ${GAP_TARBALL_NAME}
 WORKDIR "./gap-${GAP_VERSION}"
 RUN ./configure && MAKEFLAGS=-j8 make
 
-FROM base AS full
+FROM buildslim AS buildfull
+ARG GAP_VERSION
+ARG GAP_DOWNLOAD_URL
+ARG GAP_TARBALL_NAME
+ARG GAP_USER_HOMEDIR
+ARG GAP_USER_USERNAME
+ARG GAP_USER_GROUPNAME
+
+WORKDIR "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/pkg/"
+RUN "../bin/BuildPackages.sh"
+
+FROM base AS slim
 
 ARG GAP_VERSION
 ARG GAP_USER_HOMEDIR
@@ -150,21 +172,22 @@ ARG PACKAGE_MANAGER_DOWNLOAD_URL
 ENV PATH="${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/:${PATH}"
 ENV LD_LIBRARY_PATH="${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/lib"
 
-RUN apt-get update --yes &&                               \
-    apt-get install --no-install-recommends --quiet --yes \
-        4ti2                                              \
-        libcdd0d                                          \
-        libcurl4                                          \
-        libgmp10                                          \
-        libmpc3                                           \
-        libmpfi0                                          \
-        libmpfr6                                          \
-        libncurses5                                       \
-        libreadline8                                      \
-        libzmq5                                           \
-        pari-gp                                           \
-        singular                                          \
-        zlib1g
+USER ${GAP_USER_USERNAME}
+
+COPY --chown=${GAP_USER_USERNAME}:${GAP_USER_GROUPNAME} --from=buildslim "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/" "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}//"
+CMD [ "bash" ]
+
+FROM base AS full
+
+ARG GAP_VERSION
+ARG GAP_USER_HOMEDIR
+ARG GAP_USER_USERNAME
+ARG GAP_USER_GROUPNAME
+ARG PACKAGE_MANAGER_TARBALL_NAME
+ARG PACKAGE_MANAGER_DOWNLOAD_URL
+
+ENV PATH="${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/:${PATH}"
+ENV LD_LIBRARY_PATH="${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/lib"
 
 USER ${GAP_USER_USERNAME}
 
