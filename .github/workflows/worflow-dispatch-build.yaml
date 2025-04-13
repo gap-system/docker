@@ -32,8 +32,8 @@ jobs:
           images: |
             name=ghcr.io/${{ github.repository }}
           tags: |
-            type=sha
-            type=raw,value=${{ inputs.gap-version }}-${{ inputs.gap-build }}
+            type=sha,priority=100
+            type=raw,priority=900,value=${{ inputs.gap-version }}-${{ inputs.gap-build }}
 
 
       - name: 📦 docker -- login to ghcr-registry
