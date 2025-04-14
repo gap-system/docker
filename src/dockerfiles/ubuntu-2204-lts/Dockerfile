@@ -171,7 +171,7 @@ ARG GAP_USER_USERNAME
 ARG GAP_USER_GROUPNAME
 
 WORKDIR "${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/pkg/"
-RUN "../bin/BuildPackages.sh"
+RUN "../bin/BuildPackages.sh --parallel"
 
 FROM base AS slim
 
