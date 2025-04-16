@@ -57,8 +57,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        gap-version: ${{ env.gap-versions }}
-        operating-system-base: ${{ env.operating-systems }}
+        gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
+        operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
       gap-build: slim
@@ -73,8 +73,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        gap-version: ${{ env.gap-versions }}
-        operating-system-base: ${{ env.operating-systems }}
+        gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
+        operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
       gap-build: full
