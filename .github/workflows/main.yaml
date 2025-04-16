@@ -23,24 +23,27 @@ permissions:
   attestations: write
   id-token: write
 
-env:
-  gap-versions:
-    - 4.14.0
-    - 4.13.1
-    - 4.13.0
-    - 4.12.2
-    - 4.12.1
-    - 4.12.0
-  operating-systems:
-    - ubuntu-2204-lts
-
 jobs:
+  define-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.matrix.outputs.versions }}
+      systems: ${{ steps.matrix.outputs.systems }}
+    steps:
+      - name: define - gap-versions
+        id: matrix
+        run: |
+          echo 'systems=["ubuntu-2204-lts"]' >> "$GITHUB_OUTPUT"
+          echo 'versions=["4.14.0", "4.13.1", "4.13.1", "4.13.0", "4.12.2", "4.12.1", "4.12.0"]' >> "$GITHUB_OUTPUT"
+
   build-bare:
+    needs:
+      - define-matrix
     strategy:
       fail-fast: true
       matrix:
-        gap-version: ${{ env.gap-versions }}
-        operating-system-base: ${{ env.operating-systems }}
+        gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
+        operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
       gap-build: bare
@@ -49,6 +52,7 @@ jobs:
 
   build-slim:
     needs:
+      - define-matrix
       - build-bare
     strategy:
       fail-fast: true
@@ -63,6 +67,7 @@ jobs:
 
   build-full:
     needs:
+      - define-matrix
       - build-bare
       - build-slim
     strategy:
