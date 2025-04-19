@@ -17,31 +17,66 @@ on:
     branches: 
       - main
 
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
 jobs:
-  docker-image-build:
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
+  define-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.matrix.outputs.versions }}
+      systems: ${{ steps.matrix.outputs.systems }}
+    steps:
+      - name: define - gap-versions
+        id: matrix
+        run: |
+          echo 'systems=["ubuntu-2204-lts"]' >> "$GITHUB_OUTPUT"
+          echo 'versions=["4.14.0", "4.13.1", "4.13.1", "4.13.0", "4.12.2", "4.12.1", "4.12.0"]' >> "$GITHUB_OUTPUT"
+
+  build-bare:
+    needs:
+      - define-matrix
     strategy:
       fail-fast: true
       matrix:
-        operating-system-base:
-          - ubuntu-2204-lts
-        gap-build:
-          - bare
-          - slim
-          - full
-        gap-version:
-          - 4.14.0
-          - 4.13.1
-          - 4.13.0
-          - 4.12.2
-          - 4.12.1
-          - 4.12.0
+        gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
+        operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
+      gap-build: bare
       gap-version: ${{ matrix.gap-version }}
-      gap-build: ${{ matrix.gap-build }}
+      operating-system-base: ${{ matrix.operating-system-base }}
+
+  build-slim:
+    needs:
+      - define-matrix
+      - build-bare
+    strategy:
+      fail-fast: true
+      matrix:
+        gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
+        operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
+    uses: ./.github/workflows/worflow-dispatch-build.yaml
+    with:
+      gap-build: slim
+      gap-version: ${{ matrix.gap-version }}
+      operating-system-base: ${{ matrix.operating-system-base }}
+
+  build-full:
+    needs:
+      - define-matrix
+      - build-bare
+      - build-slim
+    strategy:
+      fail-fast: true
+      matrix:
+        gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
+        operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
+    uses: ./.github/workflows/worflow-dispatch-build.yaml
+    with:
+      gap-build: full
+      gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
