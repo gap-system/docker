@@ -34,7 +34,7 @@ jobs:
         id: matrix
         run: |
           echo 'systems=["ubuntu-2204-lts"]' >> "$GITHUB_OUTPUT"
-          echo 'versions=["4.14.0", "4.13.1", "4.13.1", "4.13.0", "4.12.2", "4.12.1", "4.12.0"]' >> "$GITHUB_OUTPUT"
+          echo 'versions=["4.14.0", "4.13.1", "4.13.0", "4.12.2", "4.12.1", "4.12.0"]' >> "$GITHUB_OUTPUT"
 
   build-bare:
     needs:
