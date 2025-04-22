@@ -5,14 +5,16 @@
 ## Image types
 
 ```mermaid
-    graph LR
-        A[gap-docker] --> B
-   
-        B@{ shape: docs, label: "gap-version"} --> D@{ shape: docs, label: "bare/slim/full"}
-    
-        D --> H[gap-docker:4.13.1-bare]
-        D --> K[gap-docker:4.13.1-full]
-        D --> I[gap-docker:4.13.1-slim]
+    graph RL
+        V1[gap-docker:4.13.1-bare] --> T
+        V2[gap-docker:4.13.1-full] --> T
+        V3[gap-docker:4.13.1-slim] --> T
+        T --> V
+        V --> G
+        
+        A@{ shape: processes, label: "gap-docker"}
+        V@{ shape: processes, label: "gap-version"}
+        T@{ shape: processes, label: "bare/slim/full"}
 ```
 
 * Run a container:
