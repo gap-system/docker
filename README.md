@@ -6,30 +6,13 @@
 
 ```mermaid
     graph LR
-        A[gap-docker] --> O1
-        A[gap-docker] --> O2
+        A[gap-docker] --> B
+   
+        B@{ shape: docs, label: "gap-version"} --> D@{ shape: docs, label: "bare/slim/full"}
     
-        subgraph  O1 [ ]
-            direction LR
-            B[4.13.1] --> D[bare]
-            B --> E[slim]
-            B --> F[full]
-        
-            D --> H[gap-docker:4.13.1-bare]
-            F --> K[gap-docker:4.13.1-full]
-            E --> I[gap-docker:4.13.1-slim]
-        end
-        
-        subgraph O2 [ ]
-            direction LR
-            B1[4.13.0] --> D1[bare]
-            B1 --> E1[full]
-            B1 --> F1[slim]
-        
-            D1 --> H1[gap-docker:4.13.0-bare]
-            F1 --> K1[gap-docker:4.13.0-slim]
-            E1 --> I1[gap-docker:4.13.0-full]
-        end
+        D --> H[gap-docker:4.13.1-bare]
+        D --> K[gap-docker:4.13.1-full]
+        D --> I[gap-docker:4.13.1-slim]
 ```
 
 * Run a container:
