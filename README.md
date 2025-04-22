@@ -5,7 +5,7 @@
 ## Image types
 
 ```mermaid
-    graph TD
+    graph LR
         A[GAP System Docker Images] --> B[4.13.1]
         A --> C[4.14.0]
     
