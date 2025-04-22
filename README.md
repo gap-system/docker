@@ -12,7 +12,7 @@
         T --> V
         V --> G
         
-        A@{ shape: processes, label: "gap-docker"}
+        G@{ shape: processes, label: "gap-docker"}
         V@{ shape: processes, label: "gap-version"}
         T@{ shape: processes, label: "bare/slim/full"}
 ```
