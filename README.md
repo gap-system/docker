@@ -2,6 +2,21 @@
 
 [![docker-build](https://github.com/limakzi/gap-docker/actions/workflows/main.yaml/badge.svg)](https://github.com/limakzi/gap-docker/actions/workflows/main.yaml)
 
+## Image types
+
+```mermaid
+    graph RL
+        V1[gap-docker:4.13.1-bare] --> T
+        V2[gap-docker:4.13.1-full] --> T
+        V3[gap-docker:4.13.1-slim] --> T
+        T --> V
+        V --> G
+        
+        G@{ shape: processes, label: "gap-docker"}
+        V@{ shape: processes, label: "gap-version"}
+        T@{ shape: processes, label: "bare/slim/full"}
+```
+
 * Run a container:
 
 ```
