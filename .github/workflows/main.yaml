@@ -46,6 +46,7 @@ jobs:
         operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
+      gap-type: gap
       gap-build: bare
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
@@ -61,6 +62,7 @@ jobs:
         operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
+      gap-type: gap
       gap-build: slim
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
@@ -77,6 +79,25 @@ jobs:
         operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
+      gap-type: gap
+      gap-build: full
+      gap-version: ${{ matrix.gap-version }}
+      operating-system-base: ${{ matrix.operating-system-base }}
+
+  build-full-jupyter:
+    needs:
+      - define-matrix
+      - build-bare
+      - build-slim
+      - build-full
+    strategy:
+      fail-fast: true
+      matrix:
+        gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
+        operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
+    uses: ./.github/workflows/worflow-dispatch-build.yaml
+    with:
+      gap-type: jupyter-gap
       gap-build: full
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
