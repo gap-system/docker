@@ -43,4 +43,4 @@ RUN pip3 install --no-dependencies ${JUPYTER_KERNEL_PATH}
 
 WORKDIR "/tmp"
 
-CMD ["jupyter-lab", "--ip=0.0.0.0"]
+CMD ["jupyter-lab", "--ip=0.0.0.0", "--LabApp.token=''", "--no-browser"]
