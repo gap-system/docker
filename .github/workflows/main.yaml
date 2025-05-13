@@ -36,7 +36,7 @@ jobs:
           echo 'systems=["ubuntu-2204-lts"]' >> "$GITHUB_OUTPUT"
           echo 'versions=["4.14.0", "4.13.1", "4.13.0", "4.12.2", "4.12.1", "4.12.0"]' >> "$GITHUB_OUTPUT"
 
-  build-bare:
+  bare:
     needs:
       - define-matrix
     strategy:
@@ -51,10 +51,10 @@ jobs:
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
 
-  build-slim:
+  slim:
     needs:
       - define-matrix
-      - build-bare
+      - bare
     strategy:
       fail-fast: true
       matrix:
@@ -67,11 +67,11 @@ jobs:
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
 
-  build-full:
+  full:
     needs:
       - define-matrix
-      - build-bare
-      - build-slim
+      - bare
+      - slim
     strategy:
       fail-fast: true
       matrix:
@@ -84,12 +84,12 @@ jobs:
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
 
-  build-full-jupyter:
+  jupyter:
     needs:
       - define-matrix
-      - build-bare
-      - build-slim
-      - build-full
+      - bare
+      - slim
+      - full
     strategy:
       fail-fast: true
       matrix:
