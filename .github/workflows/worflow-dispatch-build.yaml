@@ -43,9 +43,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 💻 quemu -- setup
-        uses: docker/setup-qemu-action@v3
-
       - name: 🐬 docker -- setup buildx
         uses: docker/setup-buildx-action@v3
         with:
@@ -63,7 +60,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           target: ${{ inputs.gap-build }}
-          platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max`
           build-args: |
