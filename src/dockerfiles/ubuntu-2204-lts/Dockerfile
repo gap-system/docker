@@ -1,5 +1,5 @@
 ## {{{
-ARG GAP_VERSION="4.13.1"
+ARG GAP_VERSION="4.14.0"
 ARG PACKAGE_MANAGER_VERSION="1.6.2"
 ## }}}
 
@@ -35,7 +35,8 @@ ARG GAP_USER_HOMEDIR
 RUN groupadd --system --gid ${GAP_USER_GID} ${GAP_USER_GROUPNAME} && \
      useradd --system --gid ${GAP_USER_GID} --home-dir ${GAP_USER_HOMEDIR} --create-home ${GAP_USER_USERNAME}
 
-RUN apt-get update --yes && \
+RUN apt-get clean        && \
+    apt-get update --yes && \
     apt-get install --no-install-recommends --quiet --yes \
         ca-certificates                                   \
         curl                                              \
@@ -63,7 +64,8 @@ ARG GAP_USER_HOMEDIR
 ARG GAP_USER_USERNAME
 ARG GAP_USER_GROUPNAME
 
-RUN apt-get update --yes &&                               \
+RUN apt-get clean        && \
+    apt-get update --yes && \
     apt-get install --no-install-recommends --quiet --yes \
     autoconf                                              \
     build-essential                                       \
@@ -94,7 +96,8 @@ ARG PACKAGE_MANAGER_DOWNLOAD_URL
 ENV PATH="${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/:${PATH}"
 ENV LD_LIBRARY_PATH="${GAP_USER_HOMEDIR}/gap-${GAP_VERSION}/lib"
 
-RUN apt-get update --yes &&                               \
+RUN apt-get clean        && \
+    apt-get update --yes && \
     apt-get install --no-install-recommends --quiet --yes \
         ca-certificates                                   \
         curl                                              \
@@ -133,7 +136,8 @@ ARG GAP_USER_HOMEDIR
 ARG GAP_USER_USERNAME
 ARG GAP_USER_GROUPNAME
 
-RUN apt-get update --yes &&                               \
+RUN apt-get clean        && \
+    apt-get update --yes && \
     apt-get install --no-install-recommends --quiet --yes \
     autoconf                                              \
     build-essential                                       \

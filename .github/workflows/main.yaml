@@ -40,7 +40,7 @@ jobs:
     needs:
       - define-matrix
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
         operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
