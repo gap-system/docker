@@ -3,10 +3,13 @@ name: Docker - build and publish image
 on:
   workflow_call:
     inputs:
+      gap-type:
+        required: true
+        type: string
       gap-version:
         required: true
         type: string
-      gap-build:
+      target:
         required: true
         type: string
       operating-system-base:
@@ -30,10 +33,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            name=ghcr.io/${{ github.repository }}
+            name=ghcr.io/${{ github.repository_owner }}/${{ inputs.gap-type }}
           tags: |
             type=sha,priority=100
-            type=raw,priority=900,value=${{ inputs.gap-version }}-${{ inputs.gap-build }}
+            type=raw,priority=900,value=${{ inputs.gap-version }}-${{ inputs.target }}
 
 
       - name: 📦 docker -- login to ghcr-registry
@@ -54,12 +57,12 @@ jobs:
       - name: 🐬 docker -- build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./src/dockerfiles/${{ inputs.operating-system-base }}
-          file: ./src/dockerfiles/${{ inputs.operating-system-base }}/Dockerfile
+          context: ./src/dockerfiles/${{ inputs.gap-type}}/${{ inputs.operating-system-base }}
+          file: ./src/dockerfiles/${{ inputs.gap-type}}/${{ inputs.operating-system-base }}/Dockerfile
           push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          target: ${{ inputs.gap-build }}
+          target: ${{ inputs.target }}
           cache-from: type=gha
           cache-to: type=gha,mode=max`
           build-args: |

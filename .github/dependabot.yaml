@@ -11,3 +11,8 @@ updates:
     - 'src/**/*'
     schedule:
       interval: 'daily'
+  - package-ecosystem: 'pip'
+    directories:
+    - 'src/dockerfiles/jupyter-gap/ubuntu-2204-lts/'
+    schedule:
+      interval: 'daily'
