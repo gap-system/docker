@@ -1,0 +1,4 @@
+{
+  "image": "docker pull ghcr.io/limakzi/jupyter-gap:4.12.2-full",
+  "forwardPorts": [8888]
+}
