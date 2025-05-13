@@ -47,7 +47,7 @@ jobs:
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
       gap-type: gap
-      gap-build: bare
+      target: bare
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
 
@@ -63,7 +63,7 @@ jobs:
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
       gap-type: gap
-      gap-build: slim
+      target: slim
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
 
@@ -80,7 +80,7 @@ jobs:
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
       gap-type: gap
-      gap-build: full
+      target: full
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
 
@@ -98,6 +98,6 @@ jobs:
     uses: ./.github/workflows/worflow-dispatch-build.yaml
     with:
       gap-type: jupyter-gap
-      gap-build: full
+      target: full
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
