@@ -1,6 +1,6 @@
 ## {{{
 ARG GAP_VERSION="4.12.1"
-ARG DOCKER_BASE_IMAGE_URL="ghcr.io/limakzi/gap:${GAP_VERSION}-full"
+ARG DOCKER_BASE_IMAGE_URL="ghcr.io/gap-system/gap:${GAP_VERSION}-full"
 ## }}}
 
 ## {{{
