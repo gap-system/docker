@@ -44,7 +44,7 @@ jobs:
       matrix:
         gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
         operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
-    uses: ./.github/workflows/worflow-dispatch-build.yaml
+    uses: ./.github/workflows/workflow-dispatch-build.yaml
     with:
       gap-type: gap
       target: bare
@@ -60,14 +60,14 @@ jobs:
       matrix:
         gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
         operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
-    uses: ./.github/workflows/worflow-dispatch-build.yaml
+    uses: ./.github/workflows/workflow-dispatch-build.yaml
     with:
       gap-type: gap
       target: slim
       gap-version: ${{ matrix.gap-version }}
       operating-system-base: ${{ matrix.operating-system-base }}
 
-  full:
+  buildfull:
     needs:
       - define-matrix
       - bare
@@ -77,7 +77,25 @@ jobs:
       matrix:
         gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
         operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
-    uses: ./.github/workflows/worflow-dispatch-build.yaml
+    uses: ./.github/workflows/workflow-dispatch-build.yaml
+    with:
+      gap-type: gap
+      target: buildfull
+      gap-version: ${{ matrix.gap-version }}
+      operating-system-base: ${{ matrix.operating-system-base }}
+
+  full:
+    needs:
+      - define-matrix
+      - bare
+      - slim
+      - buildfull
+    strategy:
+      fail-fast: true
+      matrix:
+        gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
+        operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
+    uses: ./.github/workflows/workflow-dispatch-build.yaml
     with:
       gap-type: gap
       target: full
@@ -95,7 +113,7 @@ jobs:
       matrix:
         gap-version: ${{ fromJSON(needs.define-matrix.outputs.versions) }}
         operating-system-base: ${{ fromJSON(needs.define-matrix.outputs.systems) }}
-    uses: ./.github/workflows/worflow-dispatch-build.yaml
+    uses: ./.github/workflows/workflow-dispatch-build.yaml
     with:
       gap-type: jupyter-gap
       target: full
