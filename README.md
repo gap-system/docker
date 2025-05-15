@@ -6,15 +6,16 @@
 
 ```mermaid
     graph RL
-        V1[gap-docker:4.13.1-bare] --> T
-        V2[gap-docker:4.13.1-full] --> T
-        V3[gap-docker:4.13.1-slim] --> T
+        V1[gap-docker:4.13.1-bare]      --> T
+        V2[gap-docker:4.13.1-full]      --> T
+        V3[gap-docker:4.13.1-slim]      --> T
+        V4[gap-docker:4.13.1-buildfull] --> T
         T --> V
         V --> G
         
         G@{ shape: processes, label: "gap-docker"}
         V@{ shape: processes, label: "gap-version"}
-        T@{ shape: processes, label: "bare/slim/full"}
+        T@{ shape: processes, label: "bare/slim/buildfull/full"}
 ```
 
 * Run a container:
