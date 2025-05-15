@@ -1,6 +1,6 @@
 ## gap-docker
 
-[![docker-build](https://github.com/limakzi/gap-docker/actions/workflows/main.yaml/badge.svg)](https://github.com/limakzi/gap-docker/actions/workflows/main.yaml)
+[![docker-build](https://github.com/gap-system/docker/actions/workflows/main.yaml/badge.svg)](https://github.com/gap-system/docker/actions/workflows/main.yaml)
 
 ## Image types
 
@@ -20,19 +20,19 @@
 * Run a container:
 
 ```
-docker run -it ghcr.io/limakzi/gap:4.13.1-full
+docker run -it ghcr.io/gap-system/gap:4.13.1-full
 ```
 
 ```
-docker run -it ghcr.io/limakzi/gap:4.14.0-full
+docker run -it ghcr.io/gap-system/gap:4.14.0-full
 ```
 
 ```
-docker run -it ghcr.io/limakzi/gap:4.13.1-bare
+docker run -it ghcr.io/gap-system/gap:4.13.1-bare
 ```
 
 ```
-docker run -it ghcr.io/limakzi/gap:4.14.0-bare
+docker run -it ghcr.io/gap-system/gap:4.14.0-bare
 ```
 
 
