@@ -55,7 +55,7 @@ jobs:
             network=host
 
       - name: 🐬 docker -- build and push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./src/dockerfiles/${{ inputs.gap-type}}/${{ inputs.operating-system-base }}
           file: ./src/dockerfiles/${{ inputs.gap-type}}/${{ inputs.operating-system-base }}/Dockerfile
