@@ -6,10 +6,10 @@
 
 ```mermaid
     graph RL
-        V1[gap-docker:4.13.1-bare]      --> T
-        V2[gap-docker:4.13.1-full]      --> T
-        V3[gap-docker:4.13.1-slim]      --> T
-        V4[gap-docker:4.13.1-buildfull] --> T
+        V1[gap-docker:4.15.1-bare]      --> T
+        V2[gap-docker:4.15.1-full]      --> T
+        V3[gap-docker:4.15.1-slim]      --> T
+        V4[gap-docker:4.15.1-buildfull] --> T
         T --> V
         V --> G
         
@@ -39,15 +39,15 @@ Besides that we have:
 * Run a container:
 
 ```
-docker run -it ghcr.io/gap-system/gap:4.13.1-full
+docker run -it ghcr.io/gap-system/gap:4.15.1-full
 ```
 
 ```
-docker run -it ghcr.io/gap-system/gap:4.14.0-full
+docker run -it ghcr.io/gap-system/gap:4.15.0-full
 ```
 
 ```
-docker run -it ghcr.io/gap-system/gap:4.13.1-bare
+docker run -it ghcr.io/gap-system/gap:4.14.0-bare
 ```
 
 ```
