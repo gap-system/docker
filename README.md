@@ -22,7 +22,7 @@ We have the following variants[^1]:
 
 * **`bare`** - Core compiled from source with only the `PackageManager` package installed. Required packages are loaded via `InstallRequiredPackages()` — no optional packages are compiled. This is the _smallest image_, suitable for minimal or custom setups where you want full control over which packages to add.
 
-* **`slim`** - Includes additional runtime libraries needed by optional packages. Suitable for users who want to _selectively compile_ only the packages they need.
+* **`slim`** - Includes additional runtime libraries needed by optional packages. Suitable for users who want to _selectively compile_ only the packages they need. All deposited `GAP` packages (i.e. those distributed in the release archives) are included, but those requiring compilation _have not been_ compiled. Some system packages required to compile GAP packages are also installed in the container.
 
 * **`full`** - Contains _all packages compiled_ via `BuildPackages.sh --parallel`. It is the largest image and the most comprehensive variant. Recommended for most users.
 
