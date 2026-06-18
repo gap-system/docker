@@ -27,7 +27,7 @@ jobs:
       id-token: write
     steps:
       - name: 👨‍💻 git -- checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🐬 docker -- metadata
         id: meta
