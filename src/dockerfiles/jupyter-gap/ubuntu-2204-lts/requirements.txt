@@ -1,1 +1,1 @@
-jupyterlab==4.6.4
+jupyterlab==4.6.6
